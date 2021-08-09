@@ -3,8 +3,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
-const { APP_PORT } = process.env
-
 const app = express()
 const { APP_UPLOAD_ROUTE, APP_UPLOAD_PATH } = process.env
 
@@ -33,6 +31,8 @@ app.use('/', auth, transactionRoute)
 app.use(auth, profileRoute)
 app.use('/history', historyRoute)
 
-app.listen(APP_PORT, () => {
-  console.log('App running on port 8080')
+const port = process.env.APP_PORT || 8080
+
+app.listen(port, () => {
+  console.log(`app running on port ${port}`)
 })
