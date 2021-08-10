@@ -31,7 +31,7 @@ app.use('/', auth, transactionRoute)
 app.use(auth, profileRoute)
 app.use('/history', historyRoute)
 
-const port = process.env.APP_PORT || 8080
+const port = process.env.PORT || 8080
 
 app.listen(port, () => {
   console.log(`app running on port ${port}`)
