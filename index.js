@@ -10,6 +10,20 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
 app.use(APP_UPLOAD_ROUTE, express.static(APP_UPLOAD_PATH))
 
+const server = require('http').createServer(app)
+const socket = require('./src/middlewares/socket')
+const io = require('socket.io')(server, {
+  cors: {
+    origins: 'https://localhost:3000'
+  }
+})
+
+app.use(socket(io))
+
+io.on('connection', () => {
+  console.log('socket connection is exist')
+})
+
 app.get('/', (req, res) => {
   const data = {
     success: true,
@@ -24,12 +38,14 @@ const transactionRoute = require('./src/routes/transactions')
 const profileRoute = require('./src/routes/profile')
 const auth = require('./src/middlewares/auth')
 const historyRoute = require('./src/routes/history')
+const ChatRoute = require('./src/routes/chat')
 
 app.use('/items', itemRoute)
 app.use('/auth', authRoute)
 app.use('/', auth, transactionRoute)
 app.use(auth, profileRoute)
 app.use('/history', historyRoute)
+app.use('/chat', auth, ChatRoute)
 
 const port = process.env.PORT || 8080
 

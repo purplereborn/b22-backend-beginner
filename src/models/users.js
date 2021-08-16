@@ -25,3 +25,7 @@ exports.getUserById2 = (id, cb) => {
   SELECT id, name, picture, email, address, number FROM ${table} WHERE id = ?
   `, [id], cb)
 }
+
+exports.getUserByPhone = (data, cb) => {
+  connection.query(`SELECT * from ${table} WHERE phoneNumber=?`, [data.number], cb)
+}
