@@ -43,7 +43,7 @@ const ChatRoute = require('./src/routes/chat')
 app.use('/items', itemRoute)
 app.use('/auth', authRoute)
 app.use('/', auth, transactionRoute)
-app.use(auth, profileRoute)
+app.use('/', auth, profileRoute)
 app.use('/history', historyRoute)
 app.use('/chat', auth, ChatRoute)
 
