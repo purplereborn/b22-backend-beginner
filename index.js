@@ -14,7 +14,7 @@ const server = require('http').createServer(app)
 const socket = require('./src/middlewares/socket')
 const io = require('socket.io')(server, {
   cors: {
-    origins: 'https://localhost:3000'
+    origins: 'http://localhost:3000'
   }
 })
 
