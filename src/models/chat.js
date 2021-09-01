@@ -17,3 +17,7 @@ exports.getAllUserChat = (data, cb) => {
   db.query('SELECT chats.id, chats.sender, chats.recipient, chats.message, users.picture, users.name, users.firstName, users.lastName, users.number from chats LEFT JOIN users ON (chats.sender=users.number or recipient=users.number) WHERE sender IN (?,?) AND recipient IN (?,?)'
     , [data.sender1, data.sender2, data.recipient1, data.recipient2], cb)
 }
+
+exports.deleteChat = (data, cb) => {
+  db.query('DELETE FROM chats WHERE (sender=? or recipient=?) and id=? ', [data.sender, data.recipient, data.id], cb)
+}

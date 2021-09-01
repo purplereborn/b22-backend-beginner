@@ -3,6 +3,7 @@ const route = require('express').Router()
 const chatController = require('../controllers/chat')
 // const auth = require('../middlewares/auth')
 
+route.delete('/:id', chatController.deleteChat)
 route.post('/', chatController.createChat)
 route.get('/', chatController.getChat)
 route.get('/allChat', chatController.getAllChat)

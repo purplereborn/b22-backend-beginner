@@ -1,7 +1,7 @@
 // const { response } = require('../helpers/standardResponse')
 const { firstResponse: response } = require('../helpers/firstResponse')
 const { getUserByPhone, getUser, searchUser } = require('../models/profile')
-const { createChat, updateChat, getUserChat, getAllUserChat } = require('../models/chat')
+const { createChat, updateChat, getUserChat, getAllUserChat, deleteChat } = require('../models/chat')
 const { APP_URL } = process.env
 
 exports.createChat = (req, res) => {
@@ -25,7 +25,7 @@ exports.createChat = (req, res) => {
                         message: data.message,
                         sender: newSender
                       })
-                      return response(res, 200, true, 'Send Message Successfully', results)
+                      return response(res, 200, true, 'Send Message Successfully', finalData)
                     } else {
                       return response(res, 500, false, 'error 1')
                     }
@@ -114,6 +114,33 @@ exports.getAllChat = (req, res) => {
       })
     } else {
       return response(res, 500, false, 'An error occured')
+    }
+  })
+}
+
+exports.deleteChat = (req, res) => {
+  getUser(req.authUser.id, (err, results) => {
+    if (!err) {
+      if (results.length > 0) {
+        const { id: stringId } = req.params
+        const id = parseInt(stringId)
+        const data = { sender: results[0].number, recipient: results[0].number, id }
+        deleteChat(data, (err, results) => {
+          if (!err) {
+            if (results.affectedRows > 0) {
+              return response(res, 200, true, 'Delete Chat Successfully', results)
+            } else {
+              return response(res, 404, false, 'Chat Not Found')
+            }
+          } else {
+            return response(res, 404, false, 'Chat Not Found')
+          }
+        })
+      } else {
+        return response(res, 404, false, 'You not logged')
+      }
+    } else {
+      return response(res, 500, false, 'An error Ocurred')
     }
   })
 }

@@ -14,7 +14,7 @@ const server = require('http').createServer(app)
 const socket = require('./src/middlewares/socket')
 const io = require('socket.io')(server, {
   cors: {
-    origin: '*'
+    origin: 'http://localhost:3000'
   }
 })
 
@@ -49,6 +49,6 @@ app.use('/chat', auth, ChatRoute)
 
 const port = process.env.PORT || 8080
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`app running on port ${port}`)
 })

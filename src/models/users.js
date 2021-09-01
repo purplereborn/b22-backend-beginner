@@ -13,6 +13,11 @@ exports.getUserByEmail = (email, cb) => {
   SELECT id, email, password FROM users WHERE email=? 
   `, [email], cb)
 }
+exports.getUserByEmail3 = (email) => {
+  connection.query(`
+  SELECT id, email, password FROM users WHERE email=? 
+  `, [email])
+}
 
 exports.getUserById = (id, cb) => {
   connection.query(`
