@@ -1,4 +1,7 @@
 const connection = require('../helpers/db')
+const { promisify } = require('util')
+
+const execPromise = promisify(connection.query).bind(connection)
 
 const table = 'users'
 
@@ -13,10 +16,14 @@ exports.getUserByEmail = (email, cb) => {
   SELECT id, email, password FROM users WHERE email=? 
   `, [email], cb)
 }
+
 exports.getUserByEmail3 = (email) => {
-  connection.query(`
-  SELECT id, email, password FROM users WHERE email=? 
-  `, [email])
+  return execPromise(
+    `
+    SELECT users.id ,users.email, users.password FROM users WHERE users.email = ?
+  `,
+    [email]
+  )
 }
 
 exports.getUserById = (id, cb) => {
