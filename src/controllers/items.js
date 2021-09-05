@@ -1,29 +1,71 @@
 const itemModel = require('../models/items')
 const timeHelper = require('../helpers/time')
 const { firstResponse: standardResponse } = require('../helpers/firstResponse')
+const { APP_URL } = process.env
 
-exports.getItems = (req, res) => {
+exports.getItems = async (req, res) => {
   const cond = req.query
   cond.search = cond.search || ''
-  cond.limit = parseInt(cond.limit) || 12
+  cond.sort = cond.sort || {}
+  cond.sort.name = cond.sort.name || 'asc'
+  cond.limit = parseInt(cond.limit) || 7
   cond.offset = parseInt(cond.offset) || 0
   cond.page = parseInt(cond.page) || 1
-
   cond.offset = (cond.page * cond.limit) - cond.limit
+  const pageInfo = {}
 
-  if (cond) {
-    itemModel.getItemsByCondition(cond, (err, results, _fields) => {
-      if (err) throw err
-      return standardResponse(res, 200, true, 'List of items', results)
-    })
-  } else {
-    itemModel.getItems((err, results, _fields) => {
-      if (!err) {
-        return standardResponse(res, 200, true, 'List of items', results)
+  try {
+    const result = await itemModel.getAllAndDetails(cond)
+    result.map((e) => {
+      if (e.picture !== null) {
+        e.picture = `${APP_URL}${e.picture}`
       }
+      return e
     })
+    const resultCount = await itemModel.getItemsCount(cond)
+    // console.log(resultCount)
+    const totalData = resultCount[0].count
+    const totalPage = Math.ceil(totalData / cond.limit)
+    pageInfo.totalData = totalData
+    pageInfo.currentPage = cond.page
+    pageInfo.totalPage = totalPage
+    pageInfo.limitPage = cond.limit
+    pageInfo.nextPage = cond.page < totalPage ? `${APP_URL}/items?page=${cond.page + 1}` : null
+    pageInfo.prevPage = cond.page <= totalPage || cond.page === 1 ? `${APP_URL}/items?page=${cond.page - 1}` : null
+    if (pageInfo.prevPage.endsWith('0')) {
+      pageInfo.prevPage = null
+    }
+    if (result.length === 0) {
+      return standardResponse(res, true, 'Empty Item', 200)
+    }
+    return standardResponse(res, 200, true, result, pageInfo)
+  } catch (err) {
+    return standardResponse(res, 400, false, 'Item not found!')
   }
 }
+
+// exports.getItems = (req, res) => {
+//   const cond = req.query
+//   cond.search = cond.search || ''
+//   cond.limit = parseInt(cond.limit) || 12
+//   cond.offset = parseInt(cond.offset) || 0
+//   cond.page = parseInt(cond.page) || 1
+
+//   cond.offset = (cond.page * cond.limit) - cond.limit
+
+//   if (cond) {
+//     itemModel.getItemsByCondition(cond, (err, results, _fields) => {
+//       if (err) throw err
+//       return standardResponse(res, 200, true, 'List of items', results)
+//     })
+//   } else {
+//     itemModel.getItems((err, results, _fields) => {
+//       if (!err) {
+//         return standardResponse(res, 200, true, 'List of items', results)
+//       }
+//     })
+//   }
+// }
 
 const itemPicture = require('../helpers/upload').single('picture')
 

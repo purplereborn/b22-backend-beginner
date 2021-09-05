@@ -1,4 +1,7 @@
 const db = require('../helpers/db')
+const { promisify } = require('util')
+
+const execPromise = promisify(db.query).bind(db)
 
 exports.createItem = (data, cb) => {
   db.query(`INSERT INTO items (picture, name, price) 
@@ -53,4 +56,19 @@ exports.getMyItemsById = (id, cb) => {
   db.query(`
   SELECT id, name, price  FROM items WHERE id IN (?) 
   `, [id], cb)
+}
+
+exports.getItemsCount = (query) => {
+  return execPromise(`SELECT COUNT (items.id) AS count FROM items WHERE items.name LIKE '%${query.search}%'`)
+}
+
+exports.getAllAndDetails = (query) => {
+  const key = Object.keys(query.sort)[0]
+  const sort = query.sort[key]
+  console.log(query)
+  if (query.search) {
+    return execPromise(`SELECT * FROM items WHERE items.name LIKE '%${query.search}%' ORDER BY ${key} ${sort} LIMIT ? OFFSET ?`, [query.limit, query.offset])
+  } else {
+    return execPromise(`SELECT * FROM items ORDER BY ${key} ${sort} LIMIT ? OFFSET ?`, [query.limit, query.offset])
+  }
 }
