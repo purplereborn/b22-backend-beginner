@@ -13,7 +13,7 @@
 4. Web Server (ex. localhost)
 
 ## Testing
-![Welcome Screen](https://user-images.githubusercontent.com/79769140/131267106-b5a6632a-a322-42e0-b99e-7f1fcb420bf8.png?raw=true)
+![Testing](https://user-images.githubusercontent.com/79769140/132144392-15d7a037-987f-441e-ae31-0d892235da4a.png)
 
 ## How to run the app ?
 
