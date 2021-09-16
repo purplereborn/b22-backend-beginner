@@ -12,6 +12,9 @@
 3. <a href="https://www.getpostman.com/">Postman</a>
 4. Web Server (ex. localhost)
 
+## Testing
+![Testing](https://user-images.githubusercontent.com/79769140/132144392-15d7a037-987f-441e-ae31-0d892235da4a.png)
+
 ## How to run the app ?
 
 1. Open app's directory in CMD or Terminal
