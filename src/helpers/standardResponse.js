@@ -1,4 +1,4 @@
-exports.response = (res, status = 200, results, message) => {
+exports.response = (res, status = 200, results, message, pageInfo) => {
   let success = true
   if (status >= 400) {
     success = false
@@ -6,7 +6,8 @@ exports.response = (res, status = 200, results, message) => {
   return res.status(status).json({
     success,
     results,
-    message
+    message,
+    pageInfo
 
   })
 }

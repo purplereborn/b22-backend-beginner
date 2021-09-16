@@ -4,10 +4,10 @@ const { promisify } = require('util')
 const execPromise = promisify(db.query).bind(db)
 
 exports.createItem = (data, cb) => {
-  db.query(`INSERT INTO items (picture, name, price) 
-  VALUES (?, ?, ?)
+  db.query(`INSERT INTO items (picture, name, price, description) 
+  VALUES (?, ?, ?, ?)
     
-  `, [data.picture, data.name, data.price], cb)
+  `, [data.picture, data.name, data.price, data.description], cb)
 }
 
 exports.getItems = (cb) => {

@@ -8,7 +8,7 @@ exports.getItems = async (req, res) => {
   cond.search = cond.search || ''
   cond.sort = cond.sort || {}
   cond.sort.name = cond.sort.name || 'asc'
-  cond.limit = parseInt(cond.limit) || 7
+  cond.limit = parseInt(cond.limit) || 8
   cond.offset = parseInt(cond.offset) || 0
   cond.page = parseInt(cond.page) || 1
   cond.offset = (cond.page * cond.limit) - cond.limit
@@ -38,7 +38,12 @@ exports.getItems = async (req, res) => {
     if (result.length === 0) {
       return standardResponse(res, true, 'Empty Item', 200)
     }
-    return standardResponse(res, 200, true, result, pageInfo)
+    return res.status(200).json({
+      success: true,
+      message: 'Item list',
+      results: result,
+      pageInfo: pageInfo
+    })
   } catch (err) {
     return standardResponse(res, 400, false, 'Item not found!')
   }
