@@ -17,7 +17,7 @@ describe('Get History test', ()=>{
 
     let req = {
       authUser: {
-        id: 22
+        id: 14
       }
     }
     const res = mockingResponse()

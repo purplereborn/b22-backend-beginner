@@ -184,3 +184,61 @@ exports.deleteHistory = async (req, res) => {
     return response(res, 404, false, 'history not found!')
   }
 }
+
+// exports.createTransaction = async (req, res) => {
+//   const data = req.body
+//   if (typeof data.item_id === 'string') {
+//     data.item_id = [data.item_id]
+//   }
+//   if (typeof data.item_amount === 'string') {
+//     data.item_amount = [data.item_amount]
+//   }
+//   if (typeof data.item_variant === 'string') {
+//     data.item_variant = [data.item_variant]
+//   }
+//   const items = await getItemsByIdAsync(data.item_id.map(id => parseInt(id)))
+//   if (items.length > 0) {
+//     const code = codeTransaction(process.env.APP_TRANSACTION_PREFIX, 1)
+//     const total = items.map((item, idx) => item.price * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
+//     const tax = total * (10 / 100)
+//     const shippingCost = 1000
+//     const paymentMethod = data.payment_method
+//     const idUser = req.authUser.id
+//     const results = await getUserByIdAsync(idUser)
+//     if (results.length > 0) {
+//       const shippingAddress = results[0].address
+//       const finalData = {
+//         code,
+//         total,
+//         tax,
+//         shipping_cost: shippingCost,
+//         shipping_address: shippingAddress,
+//         payment_method: paymentMethod,
+//         id_user: idUser
+//       }
+//       if (!shippingAddress) {
+//         return response(res, 400, null, 'address must be filled')
+//       } else {
+//         const successCreateTrx = await createTransactionAsync(finalData)
+//         if (successCreateTrx.affectedRows > 0) {
+//           items.forEach((item, idx) => {
+//             const dataFinal = {
+//               name: item.name,
+//               price: item.price,
+//               amount: data.item_amount[idx],
+//               id_item: item.id,
+//               id_transactions: successCreateTrx.insertId,
+//               variants: data.item_variant[idx]
+//             }
+//             createItemsTransaction(dataFinal)
+//           })
+//           return response(res, 200, null, 'transaction successfully created')
+//         }
+//       }
+//     } else {
+//       return response(res, 404, null, 'user not found!')
+//     }
+//   } else {
+//     return response(res, 404, null, 'id product not found!')
+//   }
+// }

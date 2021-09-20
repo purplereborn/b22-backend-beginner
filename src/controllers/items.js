@@ -15,14 +15,14 @@ exports.getItems = async (req, res) => {
   const pageInfo = {}
 
   try {
-    const result = await itemModel.getAllAndDetails(cond)
+    const result = await itemModel.getAllItems(cond)
     result.map((e) => {
       if (e.picture !== null) {
         e.picture = `${APP_URL}${e.picture}`
       }
       return e
     })
-    const resultCount = await itemModel.getItemsCount(cond)
+    const resultCount = await itemModel.getAllItems2(cond)
     // console.log(resultCount)
     const totalData = resultCount[0].count
     const totalPage = Math.ceil(totalData / cond.limit)

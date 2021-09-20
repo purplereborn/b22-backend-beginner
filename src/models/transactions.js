@@ -20,10 +20,27 @@ exports.createTransactionAsync = (data) => {
     [data.code,
       data.total,
       data.tax,
-      data.shippingCost,
-      data.shippingAddress,
-      data.paymentMethod,
-      data.idUser]
+      data.shipping_cost,
+      data.shipping_address,
+      data.payment_method,
+      data.id_user]
+  )
+}
+
+exports.createItemsTransaction = (data, cb) => {
+  connection.query(
+    `
+  INSERT INTO item_${table} (name, price, amount, id_item, id_transactions, variants) VALUES (?,?,?,?,?,?)
+  `,
+    [
+      data.name,
+      data.price,
+      data.amount,
+      data.id_item,
+      data.id_transactions,
+      data.variants
+    ],
+    cb
   )
 }
 

@@ -58,11 +58,11 @@ exports.getMyItemsById = (id, cb) => {
   `, [id], cb)
 }
 
-exports.getItemsCount = (query) => {
+exports.getAllItems2 = (query) => {
   return execPromise(`SELECT COUNT (items.id) AS count FROM items WHERE items.name LIKE '%${query.search}%'`)
 }
 
-exports.getAllAndDetails = (query) => {
+exports.getAllItems = (query) => {
   const key = Object.keys(query.sort)[0]
   const sort = query.sort[key]
   console.log(query)
@@ -71,4 +71,12 @@ exports.getAllAndDetails = (query) => {
   } else {
     return execPromise(`SELECT * FROM items ORDER BY ${key} ${sort} LIMIT ? OFFSET ?`, [query.limit, query.offset])
   }
+}
+
+exports.getItemsByIdAsync = (id) => {
+  return execPromise(
+    `
+    SELECT id, name, price FROM items WHERE id IN (?)`,
+    [id]
+  )
 }

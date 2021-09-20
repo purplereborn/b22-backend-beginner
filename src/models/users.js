@@ -41,3 +41,12 @@ exports.getUserById2 = (id, cb) => {
 exports.getUserByPhone = (data, cb) => {
   connection.query(`SELECT * from ${table} WHERE phoneNumber=?`, [data.number], cb)
 }
+
+exports.getUserByIdAsync = (id) => {
+  return execPromise(
+    `
+    SELECT * FROM users WHERE id = ?
+  `,
+    [id]
+  )
+}
