@@ -72,7 +72,7 @@ exports.getItems = async (req, res) => {
 //   }
 // }
 
-const itemPicture = require('../helpers/upload').single('picture')
+const itemPicture = require('../helpers/uploads2').single('picture')
 
 exports.createItem = (req, res) => {
   itemPicture(req, res, err => {
