@@ -1,6 +1,7 @@
 const route = require('express').Router()
 const userController = require('../controllers/profile')
 const auth = require('../middlewares/auth')
+const itemPicture = require('../helpers/upload')
 // const multer = require('multer')
 // const path = require('path')
 
@@ -22,7 +23,7 @@ const auth = require('../middlewares/auth')
 //   limits: { fileSize: maxSize }
 // })
 route.get('/profile', auth, userController.getUser)
-route.put('/updateProfile', auth, userController.updateProfile)
+route.patch('/updateProfile', auth, itemPicture, userController.updateProfile)
 route.post('/confirm', auth, userController.confirmPassword)
 route.patch('/updatePassword', auth, userController.updatePassword)
 

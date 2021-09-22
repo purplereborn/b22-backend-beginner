@@ -72,11 +72,11 @@ exports.getItems = async (req, res) => {
 //   }
 // }
 
-const itemPicture = require('../helpers/upload').single('picture')
+// const itemPicture = require('../helpers/upload').single('picture')
 
 exports.createItem = (req, res) => {
-  itemPicture(req, res, err => {
-    if (err) throw err
+
+ 
     // req.body.picture = `${process.env.APP_UPLOAD_ROUTE}/${req.file.filename}`
     req.body.picture = req.file ? `${process.env.APP_UPLOAD_ROUTE}/${req.file.filename}` : null
     itemModel.createItem(req.body, (err, results) => {
@@ -87,7 +87,7 @@ exports.createItem = (req, res) => {
         return standardResponse(res, 400, false, 'failed to create items')
       }
     })
-  })
+
 }
 
 exports.updateItemPartially = (req, res) => {

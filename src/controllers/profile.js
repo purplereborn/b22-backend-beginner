@@ -1,12 +1,15 @@
 const { response } = require('../helpers/standardResponse')
 const {
-  // getUser,
+  getUser,
   getUser2,
   updateUser,
   confirmPassword,
-  updatePassword
-  // updateUser2,
-  // updateUser3
+  updatePassword,
+  updateUser4,
+  updateUser2,
+  updateUser3,
+  updateUser5,
+  updateUser6
 } = require('../models/profile')
 // const { getUserByEmail3 } = require('../models/users')
 const { APP_UPLOAD_ROUTE } = process.env
@@ -31,7 +34,44 @@ exports.getUser = async (req, res) => {
   }
 }
 
-const itemPicture = require('../helpers/upload').single('picture')
+
+exports.updateProfile = (req, res) => {
+  getUser(req.authUser.id, async (err, results, _fields) => {
+    if (!err) {
+      if (results.length > 0) {
+        req.body.picture = req.file ? `${process.env.APP_UPLOAD_ROUTE}/${req.file.filename}` : null
+        if (req.body.picture !== null) {
+          // console.log(req.body)
+          const { name, email, address, firstName, lastName, picture, number } = req.body
+          const updateData = { name, email, address, firstName, lastName, picture, number, id: req.authUser.id }
+          // console.log(updateData)
+          updateUser6(updateData, (err, results) => {
+            if (!err) {
+              return response(res, 200, true, 'Update SuccessFully', results)
+            } else {
+              
+              return response(res, 500, false, 'Update failed 1',err)
+            }
+          })
+        } else {
+          const { name, email, address, firstName, lastName, number } = req.body
+          const updateData = { name, email, address, firstName, lastName, number, id: req.authUser.id }
+          updateUser5(updateData, (err, results) => {
+            if (!err) {
+              return response(res, 200, true, 'Update SuccessFully', results)
+            } else {
+              return response(res, 500, false, 'Update failed 2')
+            }
+          })
+        }
+      } else {
+        return response(res, 500, false, 'An error Occurred 1')
+      }
+    } else {
+      return response(res, 500, false, 'An error Occurred 2')
+    }
+  })
+}
 
 // exports.updateProfile2 = (req, res) => {
 //   console.log(req.body)
@@ -65,37 +105,37 @@ const itemPicture = require('../helpers/upload').single('picture')
 //   })
 // }
 
-exports.updateProfile = async (req, res) => {
-  // console.log(req.body)
-  const results = await getUser2(req.authUser.id)
-  if (results.length > 0) {
-    itemPicture(req, res, err => {
-      if (err) throw err
-      req.body.picture = req.file
-        ? `${APP_UPLOAD_ROUTE}/${req.file.filename}`
-        : null
+// exports.updateProfile = async (req, res) => {
+//   // console.log(req.body)
+//   const results = await getUser2(req.authUser.id)
+//   if (results.length > 0) {
+//     itemPicture(req, res, err => {
+//       if (err) throw err
+//       req.body.picture = req.file
+//         ? `${APP_UPLOAD_ROUTE}/${req.file.filename}`
+//         : null
 
-      const { name, email, address, number, picture, firstName, lastName } = req.body
-      // console.log(req.body)
-      const updateData = { name, email, address, number, picture, firstName, lastName }
-      // console.log(updateData)
-      // updateUser(updateData, req.authUser.id)
-      // return response(res, 200, null, 'Profile updated successfully')
-      // return response(res, 400, null, 'An error occurred')
+//       const { name, email, address, number, picture, firstName, lastName } = req.body
+//       // console.log(req.body)
+//       const updateData = { name, email, address, number, picture, firstName, lastName }
+//       // console.log(updateData)
+//       // updateUser(updateData, req.authUser.id)
+//       // return response(res, 200, null, 'Profile updated successfully')
+//       // return response(res, 400, null, 'An error occurred')
 
-      updateUser(updateData, req.authUser.id)
-      // console.log(err)
-      // if (!err) {
-      return response(res, 200, null, 'Profile updated successfully')
-      // } else {
-      //   return response(res, 400, null, 'An error occurred')
-      // }
-    })
-  } else {
-    // console.log(results)
-    return response(res, 401, null, 'Profile Not found')
-  }
-}
+//       updateUser(updateData, req.authUser.id)
+//       // console.log(err)
+//       // if (!err) {
+//       return response(res, 200, null, 'Profile updated successfully')
+//       // } else {
+//       //   return response(res, 400, null, 'An error occurred')
+//       // }
+//     })
+//   } else {
+//     // console.log(results)
+//     return response(res, 401, null, 'Profile Not found')
+//   }
+// }
 
 exports.confirmPassword = async (req, res) => {
   const { password } = req.body
