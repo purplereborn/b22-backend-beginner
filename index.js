@@ -12,9 +12,15 @@ app.use(APP_UPLOAD_ROUTE, express.static(APP_UPLOAD_PATH))
 
 const server = require('http').createServer(app)
 const socket = require('./src/middlewares/socket')
+// const io = require('socket.io')(server, {
+//   cors: {
+//     origin: 'http://localhost:3000'
+//   }
+// })
+
 const io = require('socket.io')(server, {
   cors: {
-    origin: 'http://localhost:3000'
+    origin: 'https://sandi-coffeeshop-react.netlify.app'
   }
 })
 
@@ -37,14 +43,14 @@ const authRoute = require('./src/routes/auth')
 const transactionRoute = require('./src/routes/transactions')
 const profileRoute = require('./src/routes/profile')
 const auth = require('./src/middlewares/auth')
-const historyRoute = require('./src/routes/history')
+// const historyRoute = require('./src/routes/history')
 const ChatRoute = require('./src/routes/chat')
 
 app.use('/items', itemRoute)
 app.use('/auth', authRoute)
 app.use('/', auth, transactionRoute)
 app.use('/', auth, profileRoute)
-app.use('/history', historyRoute)
+// app.use('/history', historyRoute)
 app.use('/chat', auth, ChatRoute)
 
 const port = process.env.PORT || 8080

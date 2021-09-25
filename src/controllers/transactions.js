@@ -87,6 +87,7 @@ const { getUser2 } = require('../models/profile')
 // }
 
 exports.historyTransaction = async (req, res) => {
+  // const idUser = req.authUser.id
   const { id } = req.authUser
   const results = await getTransactionById2(id)
   if (results.length > 0) {
