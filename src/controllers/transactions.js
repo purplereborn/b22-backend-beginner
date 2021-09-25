@@ -24,11 +24,11 @@ exports.createTransactions = (req, res) => {
     const idUser = req.authUser.id
     const code = codeTransaction(APP_TRANSACTION_PREFIX, idUser)
     const totalSub = []
-    // if (items.length === 1) {
-    //   const total = data.item_variant.map((item, idx) => (items[0].price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
-    //   totalSub.push(total)
-    // }
     if (items.length === 1) {
+      const total = data.item_variant.map((item, idx) => (items[0].price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
+      totalSub.push(total)
+    }
+    if (items.length > 1) {
       const total = items.map((item, idx) => (item.price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
       totalSub.push(total)
     }
@@ -64,22 +64,22 @@ exports.createTransactions = (req, res) => {
             })
           })
         }
-        // if (items.length > 1) {
-        //   items.forEach((item, idx) => {
-        //     const setData = {
-        //       name: item.name,
-        //       price: item.price + additionalPrice[idx],
-        //       variants: data.item_variant[idx],
-        //       amount: data.item_amount[idx],
-        //       id_item: item.id,
-        //       code: code
-        //     }
-        //     createItemTransaction(setData, (err, results) => {
-        //       if (err) throw err
-        //       console.log(`Item ${item.id} inserted to items_transactions`)
-        //     })
-        //   })
-        // }
+        if (items.length > 1) {
+          items.forEach((item, idx) => {
+            const setData = {
+              name: item.name,
+              price: item.price + additionalPrice[idx],
+              variants: data.item_variant[idx],
+              amount: data.item_amount[idx],
+              id_item: item.id,
+              code: code
+            }
+            createItemTransaction(setData, (err, results) => {
+              if (err) throw err
+              console.log(`Item ${item.id} inserted to items_transactions`)
+            })
+          })
+        }
         return response(res, 200, true, 'Success add transaction!')
       })
     })
