@@ -1,90 +1,90 @@
 const { firstResponse: response } = require('../helpers/firstResponse')
 const { codeTransaction } = require('../helpers/transaction')
-// const { getMyItemsById } = require('../models/items')
+const { getMyItemsById } = require('../models/items')
 const {
   createProductTransactionAsync, getProductsByIdAsync,
-  // createTransaction, createItemTransaction, getTransactionById,
+  createTransaction, createItemTransaction, getTransactionById,
   createTransactionAsync, getTransactionById2, deleteHistory2
 } = require('../models/transactions')
-// const { getUserById2 } = require('../models/users')
+const { getUserById2 } = require('../models/users')
 const { APP_TRANSACTION_PREFIX } = process.env
 const { getUser2 } = require('../models/profile')
 
-// exports.createTransactions2 = (req, res) => {
-//   const data = req.body
-//   if (typeof data.item_id === 'string') {
-//     data.item_id = [data.item_id]
-//     data.item_amount = [data.item_amount]
-//     data.item_variant = [data.item_variant]
-//     data.item_additional_price = [data.item_additional_price]
-//   }
-//   const additionalPrice = data.item_additional_price.map(elem => parseInt(elem))
-//   getMyItemsById(data.item_id.map(id => parseInt(id)), (err, items) => {
-//     if (err) throw err
-//     const idUser = req.authUser.id
-//     const code = codeTransaction(APP_TRANSACTION_PREFIX, idUser)
-//     const totalSub = []
-//     if (items.length === 1) {
-//       const total = data.item_variant.map((item, idx) => (items[0].price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
-//       totalSub.push(total)
-//     }
-//     if (items.length > 1) {
-//       const total = items.map((item, idx) => (item.price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
-//       totalSub.push(total)
-//     }
-//     const subTotal = parseInt(totalSub[0])
-//     const tax = subTotal * 10 / 100
-//     const shippingCost = 10000
-//     const paymentMethod = data.payment_method
-//     const total = subTotal + tax + shippingCost
-//     getUserById2(idUser, (err, results) => {
-//       if (err) throw err
-//       const shippingAddress = results[0].address
-//       if (!shippingAddress) {
-//         return response(res, 400, false, 'Address must be provided!')
-//       }
-//       const setData = {
-//         code, total, tax, shippingCost, shippingAddress, paymentMethod, idUser
-//       }
-//       createTransaction(setData, (err, results) => {
-//         if (err) throw err
-//         if (items.length === 1) {
-//           data.item_variant.forEach((v, i) => {
-//             const setData = {
-//               name: items[0].name,
-//               price: items[0].price + additionalPrice[i],
-//               variants: v,
-//               amount: data.item_amount[i],
-//               id_item: items[0].id,
-//               code: code
-//             }
-//             createItemTransaction(setData, (err, results) => {
-//               if (err) throw err
-//               console.log(`Item ${items[0].id} inserted to items_transactions`)
-//             })
-//           })
-//         }
-//         if (items.length > 1) {
-//           items.forEach((item, idx) => {
-//             const setData = {
-//               name: item.name,
-//               price: item.price + additionalPrice[idx],
-//               variants: data.item_variant[idx],
-//               amount: data.item_amount[idx],
-//               id_item: item.id,
-//               code: code
-//             }
-//             createItemTransaction(setData, (err, results) => {
-//               if (err) throw err
-//               console.log(`Item ${item.id} inserted to items_transactions`)
-//             })
-//           })
-//         }
-//         return response(res, 200, true, 'Success add transaction!')
-//       })
-//     })
-//   })
-// }
+exports.createTransactions = (req, res) => {
+  const data = req.body
+  if (typeof data.item_id === 'string') {
+    data.item_id = [data.item_id]
+    data.item_amount = [data.item_amount]
+    data.item_variant = [data.item_variant]
+    data.item_additional_price = [data.item_additional_price]
+  }
+  const additionalPrice = data.item_additional_price.map(elem => parseInt(elem))
+  getMyItemsById(data.item_id.map(id => parseInt(id)), (err, items) => {
+    if (err) throw err
+    const idUser = req.authUser.id
+    const code = codeTransaction(APP_TRANSACTION_PREFIX, idUser)
+    const totalSub = []
+    // if (items.length === 1) {
+    //   const total = data.item_variant.map((item, idx) => (items[0].price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
+    //   totalSub.push(total)
+    // }
+    if (items.length === 1) {
+      const total = items.map((item, idx) => (item.price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
+      totalSub.push(total)
+    }
+    const subTotal = parseInt(totalSub[0])
+    const tax = subTotal * 10 / 100
+    const shippingCost = 10000
+    const paymentMethod = data.payment_method
+    const total = subTotal + tax + shippingCost
+    getUserById2(idUser, (err, results) => {
+      if (err) throw err
+      const shippingAddress = results[0].address
+      if (!shippingAddress) {
+        return response(res, 400, false, 'Address must be provided!')
+      }
+      const setData = {
+        code, total, tax, shippingCost, shippingAddress, paymentMethod, idUser
+      }
+      createTransaction(setData, (err, results) => {
+        if (err) throw err
+        if (items.length === 1) {
+          data.item_variant.forEach((v, i) => {
+            const setData = {
+              name: items[0].name,
+              price: items[0].price + additionalPrice[i],
+              variants: v,
+              amount: data.item_amount[i],
+              id_item: items[0].id,
+              code: code
+            }
+            createItemTransaction(setData, (err, results) => {
+              if (err) throw err
+              console.log(`Item ${items[0].id} inserted to items_transactions`)
+            })
+          })
+        }
+        // if (items.length > 1) {
+        //   items.forEach((item, idx) => {
+        //     const setData = {
+        //       name: item.name,
+        //       price: item.price + additionalPrice[idx],
+        //       variants: data.item_variant[idx],
+        //       amount: data.item_amount[idx],
+        //       id_item: item.id,
+        //       code: code
+        //     }
+        //     createItemTransaction(setData, (err, results) => {
+        //       if (err) throw err
+        //       console.log(`Item ${item.id} inserted to items_transactions`)
+        //     })
+        //   })
+        // }
+        return response(res, 200, true, 'Success add transaction!')
+      })
+    })
+  })
+}
 
 exports.historyTransaction = async (req, res) => {
   // const idUser = req.authUser.id
@@ -97,82 +97,82 @@ exports.historyTransaction = async (req, res) => {
   }
 }
 
-exports.createTransactions = async (req, res) => {
-  const data = req.body
-  if (typeof data.item_id === 'string') {
-    data.item_id = [data.item_id]
-    data.item_amount = [data.item_amount]
-    data.item_variant = [data.item_variant]
-    data.item_additional_price = [data.item_additional_price]
-  }
-  const additionalPrice = data.item_additional_price
-  // .map(elem => parseInt(elem))
-  const items = await getProductsByIdAsync(data.item_id.map(id => parseInt(id)))
-  if (items.length > 0) {
-    const idUser = req.authUser.id
-    const code = codeTransaction(APP_TRANSACTION_PREFIX, idUser)
-    const totalSub = []
-    if (items.length === 1) {
-      const total = data.item_variant.map((item, idx) => (items[0].price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
-      totalSub.push(total)
-    }
-    // if (items.length > 1) {
-    //   const total = items.map((item, idx) => (item.price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
-    //   totalSub.push(total)
-    // }
-    const subTotal = parseInt(totalSub[0])
-    const tax = subTotal * 10 / 100
-    const shippingCost = 10000
-    const paymentMethod = data.payment_method
-    const total = subTotal + tax + shippingCost
-    const results = await getUser2(idUser)
-    if (results.length > 0) {
-      const shippingAddress = results[0].address
-      const setData = {
-        code, total, tax, shippingCost, shippingAddress, paymentMethod, idUser
-      }
-      if (!shippingAddress) {
-        return response(res, 400, false, 'you must complete the address data')
-      } else {
-        const successCreateTrx = await createTransactionAsync(setData)
-        if (successCreateTrx.affectedRows === 1) {
-          data.item_variant.forEach((v, i) => {
-            const setData = {
-              name: items[0].name,
-              price: items[0].price + additionalPrice[i],
-              variants: v,
-              amount: data.item_amount[i],
-              id_item: items[0].id,
-              code: code
-            }
-            createProductTransactionAsync(setData)
-            // console.log(`Item ${items[0].id} inserted to items_transactions`)
-          })
+// exports.createTransactions = async (req, res) => {
+//   const data = req.body
+//   if (typeof data.item_id === 'string') {
+//     data.item_id = [data.item_id]
+//     data.item_amount = [data.item_amount]
+//     data.item_variant = [data.item_variant]
+//     data.item_additional_price = [data.item_additional_price]
+//   }
+//   const additionalPrice = data.item_additional_price
+//   // .map(elem => parseInt(elem))
+//   const items = await getProductsByIdAsync(data.item_id.map(id => parseInt(id)))
+//   if (items.length > 0) {
+//     const idUser = req.authUser.id
+//     const code = codeTransaction(APP_TRANSACTION_PREFIX, idUser)
+//     const totalSub = []
+//     if (items.length === 1) {
+//       const total = data.item_variant.map((item, idx) => (items[0].price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
+//       totalSub.push(total)
+//     }
+//     // if (items.length > 1) {
+//     //   const total = items.map((item, idx) => (item.price + additionalPrice[idx]) * data.item_amount[idx]).reduce((acc, curr) => acc + curr)
+//     //   totalSub.push(total)
+//     // }
+//     const subTotal = parseInt(totalSub[0])
+//     const tax = subTotal * 10 / 100
+//     const shippingCost = 10000
+//     const paymentMethod = data.payment_method
+//     const total = subTotal + tax + shippingCost
+//     const results = await getUser2(idUser)
+//     if (results.length > 0) {
+//       const shippingAddress = results[0].address
+//       const setData = {
+//         code, total, tax, shippingCost, shippingAddress, paymentMethod, idUser
+//       }
+//       if (!shippingAddress) {
+//         return response(res, 400, false, 'you must complete the address data')
+//       } else {
+//         const successCreateTrx = await createTransactionAsync(setData)
+//         if (successCreateTrx.affectedRows === 1) {
+//           data.item_variant.forEach((v, i) => {
+//             const setData = {
+//               name: items[0].name,
+//               price: items[0].price + additionalPrice[i],
+//               variants: v,
+//               amount: data.item_amount[i],
+//               id_item: items[0].id,
+//               code: code
+//             }
+//             createProductTransactionAsync(setData)
+//             // console.log(`Item ${items[0].id} inserted to items_transactions`)
+//           })
 
-          return response(res, 200, true, 'transaction successfully created')
-        }
-        // if (items.length > 1) {
-        //   items.forEach((item, idx) => {
-        //     const setData = {
-        //       name: item.name,
-        //       price: item.price + additionalPrice[idx],
-        //       variants: data.item_variant[idx],
-        //       amount: data.item_amount[idx],
-        //       id_item: item.id,
-        //       code: code
-        //     }
-        //     createProductTransactionAsync(setData)
-        //     // console.log(`Item ${items[0].id} inserted to items_transactions`)
-        //   })
-        // } return response(res, 200, true, 'Success add transaction!')
-      }
-    } else {
-      return response(res, 404, false, 'User not found')
-    }
-  } else {
-    return response(res, 404, false, 'id item not found')
-  }
-}
+//           return response(res, 200, true, 'transaction successfully created')
+//         }
+//         // if (items.length > 1) {
+//         //   items.forEach((item, idx) => {
+//         //     const setData = {
+//         //       name: item.name,
+//         //       price: item.price + additionalPrice[idx],
+//         //       variants: data.item_variant[idx],
+//         //       amount: data.item_amount[idx],
+//         //       id_item: item.id,
+//         //       code: code
+//         //     }
+//         //     createProductTransactionAsync(setData)
+//         //     // console.log(`Item ${items[0].id} inserted to items_transactions`)
+//         //   })
+//         // } return response(res, 200, true, 'Success add transaction!')
+//       }
+//     } else {
+//       return response(res, 404, false, 'User not found')
+//     }
+//   } else {
+//     return response(res, 404, false, 'id item not found')
+//   }
+// }
 
 exports.deleteHistory = async (req, res) => {
   const { id } = req.authUser

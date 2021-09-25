@@ -34,7 +34,6 @@ exports.getUser = async (req, res) => {
   }
 }
 
-
 exports.updateProfile = (req, res) => {
   getUser(req.authUser.id, async (err, results, _fields) => {
     if (!err) {
@@ -49,8 +48,7 @@ exports.updateProfile = (req, res) => {
             if (!err) {
               return response(res, 200, true, 'Update SuccessFully', results)
             } else {
-              
-              return response(res, 500, false, 'Update failed 1',err)
+              return response(res, 500, false, 'Update failed 1', err)
             }
           })
         } else {

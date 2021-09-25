@@ -47,8 +47,8 @@ exports.createItemsTransaction = (data, cb) => {
 exports.createProductTransactionAsync = (data) => {
   return execPromise(
     `
-    INSERT INTO item_transactions (name, price, variants, amount, id_item, id_transactions) VALUES (?,?,?,?,?,?)`,
-    [data.name, data.price, data.variants, data.amount, data.id_item, data.code]
+    INSERT INTO item_transactions (name, price,  amount, id_item, id_transactions) VALUES (?,?,?,?,?)`,
+    [data.name, data.price, data.amount, data.id_item, data.code]
   )
 }
 
@@ -60,8 +60,8 @@ exports.createTransaction = (data, cb) => {
 
 exports.createItemTransaction = (data, cb) => {
   connection.query(`
-  INSERT INTO item_transactions (name, price, variants, amount, id_item, id_transactions) VALUES (?,?,?,?,?,?)
-  `, [data.name, data.price, data.variants, data.amount, data.id_item, data.code], cb)
+  INSERT INTO item_transactions (name, price,  amount, id_item, id_transactions) VALUES (?,?,?,?,?)
+  `, [data.name, data.price, data.amount, data.id_item, data.code], cb)
 }
 
 exports.getTransactionById = (id, cb) => {
