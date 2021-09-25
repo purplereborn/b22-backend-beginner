@@ -4,7 +4,7 @@ const { getMyItemsById } = require('../models/items')
 const {
   createProductTransactionAsync, getProductsByIdAsync,
   createTransaction, createItemTransaction, getTransactionById,
-  createTransactionAsync, getTransactionById2, deleteHistory2
+  createTransactionAsync, getTransactionById2, deleteHistory2, getTrx
 } = require('../models/transactions')
 const { getUserById2 } = require('../models/users')
 const { APP_TRANSACTION_PREFIX } = process.env
@@ -86,15 +86,25 @@ exports.createTransactions = (req, res) => {
   })
 }
 
-exports.historyTransaction = async (req, res) => {
-  // const idUser = req.authUser.id
-  const { id } = req.authUser
-  const results = await getTransactionById2(id)
-  if (results.length > 0) {
-    return response(res, 200, true, 'History Transactions', results)
-  } else {
-    return response(res, 500, false, 'History Transactions not found')
-  }
+// exports.historyTransaction = async (req, res) => {
+//   // const idUser = req.authUser.id
+//   const { id } = req.authUser
+//   const results = await getTransactionById2(id)
+//   if (results.length > 0) {
+//     return response(res, 200, true, 'History Transactions', results)
+//   } else {
+//     return response(res, 500, false, 'History Transactions not found')
+//   }
+// }
+
+exports.historyTransaction = (req, res) => {
+  getTrx(req.authUser.id, (err, results) => {
+    if (!err) {
+      return response(res, 200, true, 'History Transaction', results)
+    } else {
+      return response(res, 500, false, 'An error Occurred')
+    }
+  })
 }
 
 // exports.createTransactions = async (req, res) => {
