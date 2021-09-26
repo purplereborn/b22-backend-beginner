@@ -30,8 +30,8 @@ exports.getItems = async (req, res) => {
     pageInfo.currentPage = cond.page
     pageInfo.totalPage = totalPage
     pageInfo.limitPage = cond.limit
-    pageInfo.nextPage = cond.page < totalPage ? `${APP_URL}/items?page=${cond.page + 1}` : null
-    pageInfo.prevPage = cond.page <= totalPage || cond.page === 1 ? `${APP_URL}/items?page=${cond.page - 1}` : null
+    pageInfo.nextPage = cond.page < totalPage ? `${APP_URL}items?page=${cond.page + 1}` : null
+    pageInfo.prevPage = cond.page <= totalPage || cond.page === 1 ? `${APP_URL}items?page=${cond.page - 1}` : null
     if (pageInfo.prevPage.endsWith('0')) {
       pageInfo.prevPage = null
     }
