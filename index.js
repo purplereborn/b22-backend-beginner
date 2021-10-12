@@ -10,26 +10,19 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
 app.use(APP_UPLOAD_ROUTE, express.static(APP_UPLOAD_PATH))
 
-const socket = require('./src/middlewares/socket')
 const server = require('http').createServer(app)
-
-const io = require('socket.io')(server, {
-  cors: {
-    origin: '*:*'
-  }
-})
-
+const socket = require('./src/middlewares/socket')
 // const io = require('socket.io')(server, {
 //   cors: {
 //     origin: 'http://localhost:3000'
 //   }
 // })
 
-// const io = require('socket.io')(server, {
-//   cors: {
-//     origin: 'https://sandi-coffeeshop-react.netlify.app'
-//   }
-// })
+const io = require('socket.io')(server, {
+  cors: {
+    origin: 'https://sandi-coffeeshop-react.netlify.app'
+  }
+})
 
 // const io = require('socket.io')(server, {
 //   cors: {
