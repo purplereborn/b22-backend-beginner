@@ -10,12 +10,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
 app.use(APP_UPLOAD_ROUTE, express.static(APP_UPLOAD_PATH))
 
-const server = require('http').createServer(app)
 const socket = require('./src/middlewares/socket')
+const server = require('http').createServer(app)
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: '*'
+    origin: '*:*'
   }
 })
 
