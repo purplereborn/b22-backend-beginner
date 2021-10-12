@@ -26,9 +26,24 @@ exports.getUserByEmail3 = (email) => {
   )
 }
 
+exports.getUserByNumber3 = (number) => {
+  return execPromise(
+    `
+    SELECT users.id ,users.number FROM users WHERE users.number = ?
+  `,
+    [number]
+  )
+}
+
 exports.getUserById = (id, cb) => {
   connection.query(`
   SELECT id, picture, name, email, address FROM users WHERE id=?
+  `, [id], cb)
+}
+
+exports.getUserByIdChat = (id, cb) => {
+  connection.query(`
+  SELECT id, picture, name, email, address, number FROM users WHERE id=?
   `, [id], cb)
 }
 

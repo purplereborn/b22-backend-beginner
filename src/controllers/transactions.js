@@ -4,7 +4,7 @@ const { getMyItemsById } = require('../models/items')
 const {
   createProductTransactionAsync, getProductsByIdAsync,
   createTransaction, createItemTransaction, getTransactionById,
-  createTransactionAsync, getTransactionById2, deleteHistory2, getTrx
+  createTransactionAsync, getTransactionById2, deleteHistory2, getTrx, getTransactionId9, deleteHistory9
 } = require('../models/transactions')
 const { getUserById2 } = require('../models/users')
 const { APP_TRANSACTION_PREFIX } = process.env
@@ -190,6 +190,20 @@ exports.deleteHistory = async (req, res) => {
   if (results.length > 0) {
     // console.log(results)
     await deleteHistory2(id)
+    return response(res, 200, true, 'history has been deleted!')
+  } else {
+    return response(res, 404, false, 'history not found!')
+  }
+}
+
+exports.deleteHistoryById = async (req, res) => {
+  const { id } = req.authUser
+  const results = await getTransactionId9(id)
+  if (results.length > 0) {
+    const { id: stringId } = req.params
+    const id = parseInt(stringId)
+    const data = id
+    await deleteHistory9(data)
     return response(res, 200, true, 'history has been deleted!')
   } else {
     return response(res, 404, false, 'history not found!')

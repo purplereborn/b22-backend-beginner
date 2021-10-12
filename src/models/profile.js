@@ -87,3 +87,9 @@ exports.updatePassword = (data) => {
     })
   })
 }
+
+exports.getUserByIdChat = (id, cb) => {
+  db.query(`
+  SELECT id, picture, name, email, address, number FROM users WHERE id=?
+  `, [id], cb)
+}

@@ -112,3 +112,19 @@ exports.deleteHistory2 = (id) => {
 //   DELETE FROM transactions WHERE id = ?
 //   `, [id])
 // }
+
+exports.getTransactionId9 = (id) => {
+  return execPromise(
+    `
+    SELECT * FROM transactions WHERE id_user = ?`,
+    [id]
+  )
+}
+
+exports.deleteHistory9 = (id) => {
+  return execPromise(
+    `
+    DELETE FROM transactions WHERE id=?`,
+    [id]
+  )
+}

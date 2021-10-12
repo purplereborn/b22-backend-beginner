@@ -2,17 +2,17 @@ const { response } = require('../helpers/standardResponse')
 const {
   getUser,
   getUser2,
-  updateUser,
+  // updateUser,
   confirmPassword,
   updatePassword,
-  updateUser4,
-  updateUser2,
-  updateUser3,
+  // updateUser4,
+  // updateUser2,
+  // updateUser3,
   updateUser5,
   updateUser6
 } = require('../models/profile')
 // const { getUserByEmail3 } = require('../models/users')
-const { APP_UPLOAD_ROUTE } = process.env
+// const { APP_UPLOAD_ROUTE } = process.env
 const bcrypt = require('bcrypt')
 
 // exports.getUser = (req, res) => {

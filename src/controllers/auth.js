@@ -1,5 +1,5 @@
 const { response } = require('../helpers/standardResponse')
-const { createUser, getUserByEmail3 } = require('../models/users')
+const { createUser, getUserByEmail3, getUserByNumber3 } = require('../models/users')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 // const { APP_KEY } = process.env
@@ -13,6 +13,10 @@ exports.register = async (req, res) => {
   const results1 = await getUserByEmail3(data.email)
   if (results1.length > 0) {
     return response(res, 400, false, 'Email is already in use')
+  }
+  const results2 = await getUserByNumber3(data.number)
+  if (results2.length > 0) {
+    return response(res, 400, false, 'Phone number is already in use')
   }
   await createUser(data)
   return response(res, 200, true, 'Register Successfully')
